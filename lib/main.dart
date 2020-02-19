@@ -80,12 +80,14 @@ class HackerNewsListState extends State<HackerNewsList> {
 
   //todo перенести в отдельный рест клиент
   Future<List<News>> _fetchId() async {
-    var url = "https://hacker-news.firebaseio.com/v0/topstories.json";
+    var url = "https://hacker-news.firebaseio.com/v0/topstories.json?limitToLast=5";
     var response = await http.get(url);
     if (response.statusCode == 200) {
       Iterable jsonResponse = convert.jsonDecode(response.body);
       print("response: $jsonResponse");
       return Future.wait(jsonResponse.map((itemId) => _fetchNews(itemId)));
+    }else{
+      return Future.error("Netowrk error code ${response.statusCode}, message: ${response.body}");
     }
   }
 
