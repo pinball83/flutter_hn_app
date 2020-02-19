@@ -2,6 +2,8 @@ import 'dart:convert' as convert;
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hn_app/model/news.dart';
+import 'package:flutter_hn_app/theme.dart';
 import 'package:http/http.dart' as http;
 
 void main() => runApp(MyApp());
@@ -12,27 +14,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Hacker News',
-      theme: ThemeData(
-          // Define the default brightness and colors.
-          brightness: Brightness.dark,
-          primaryColor: Color.fromRGBO(253, 103, 33, 1.0),
-          accentColor: Color.fromRGBO(246, 246, 240, 1.0),
-          textTheme: TextTheme(
-            headline: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
-            title: TextStyle(
-              fontSize: 36.0,
-              fontStyle: FontStyle.italic,
-            ),
-            body1: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
-            display1: TextStyle(
-                fontSize: 18.0,
-                fontStyle: FontStyle.normal,
-                color: Colors.black45),
-            display2: TextStyle(
-                fontSize: 13.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.black45),
-          )),
+      theme: ApplicationTheme.themeData,
       home: MainPage(title: 'Hacker News Flutter Demo'),
     );
   }
@@ -80,14 +62,16 @@ class HackerNewsListState extends State<HackerNewsList> {
 
   //todo перенести в отдельный рест клиент
   Future<List<News>> _fetchId() async {
-    var url = "https://hacker-news.firebaseio.com/v0/topstories.json?limitToLast=5";
+    var url =
+        "https://hacker-news.firebaseio.com/v0/topstories.json?limitToLast=5";
     var response = await http.get(url);
     if (response.statusCode == 200) {
       Iterable jsonResponse = convert.jsonDecode(response.body);
       print("response: $jsonResponse");
       return Future.wait(jsonResponse.map((itemId) => _fetchNews(itemId)));
-    }else{
-      return Future.error("Netowrk error code ${response.statusCode}, message: ${response.body}");
+    } else {
+      return Future.error(
+          "Netowrk error code ${response.statusCode}, message: ${response.body}");
     }
   }
 
@@ -167,16 +151,4 @@ class HackerNewsListState extends State<HackerNewsList> {
       },
     );
   }
-}
-
-//todo вынести в отдельный класс
-class News {
-  final String title;
-  final String url;
-
-  News(this.title, this.url);
-
-  News.fromJson(Map<String, dynamic> json)
-      : title = json["title"],
-        url = json["url"];
 }
