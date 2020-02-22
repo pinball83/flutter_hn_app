@@ -1,10 +1,9 @@
-import 'dart:convert' as convert;
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hn_app/model/news.dart';
+import 'package:flutter_hn_app/remote/rest_client.dart';
 import 'package:flutter_hn_app/theme.dart';
-import 'package:http/http.dart' as http;
 
 void main() => runApp(MyApp());
 
@@ -30,7 +29,6 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  List<News> _news;
 
   @override
   Widget build(BuildContext context) {
@@ -41,56 +39,25 @@ class _MainPageState extends State<MainPage> {
       body: Center(
           // Center is a layout widget. It takes a single child and positions it
           // in the middle of the parent.
-          child: HackerNewsList(_news)),
+          child: HackerNewsList()),
     );
   }
 }
 
 class HackerNewsList extends StatefulWidget {
-  final List<News> news;
 
-  HackerNewsList(this.news);
+  HackerNewsList();
 
   @override
-  State<StatefulWidget> createState() => HackerNewsListState(news);
+  State<StatefulWidget> createState() => HackerNewsListState();
 }
 
 class HackerNewsListState extends State<HackerNewsList> {
-  List<News> news;
-
-  HackerNewsListState(this.news);
-
-  //todo перенести в отдельный рест клиент
-  Future<List<News>> _fetchId() async {
-    var url =
-        "https://hacker-news.firebaseio.com/v0/topstories.json?orderBy=\"\$key\"&limitToFirst=50&startAt=\"3\"";
-    var response = await http.get(url);
-    if (response.statusCode == 200) {
-      Iterable jsonResponse = convert.jsonDecode(response.body);
-      print("response: $jsonResponse");
-      return Future.wait(jsonResponse
-          .where((element) => element != null)
-          .map((itemId) => _fetchNews(itemId)));
-    } else {
-      return Future.error(
-          "Netowrk error code ${response.statusCode}, message: ${response.body}");
-    }
-  }
-
-//todo перенести в отдельный рест клиент
-  Future<News> _fetchNews(int itemId) async {
-    var url = "https://hacker-news.firebaseio.com/v0/item/$itemId.json";
-    var response = await http.get(url);
-    if (response.statusCode == 200) {
-      var jsonDecode = convert.jsonDecode(response.body);
-      return News.fromJson(jsonDecode);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<News>>(
-        future: _fetchId(), // a previously-obtained Future<String> or null
+        future: futureNews,
         builder: (BuildContext context, AsyncSnapshot<List<News>> snapshot) {
           List<Widget> children;
           if (snapshot.hasData) {
@@ -152,5 +119,19 @@ class HackerNewsListState extends State<HackerNewsList> {
         log('tap ${news.url}');
       },
     );
+  }
+
+  HackerNewsRestClient restClient = HackerNewsRestClient();
+
+  Future<List<News>> _fetchId() {
+    restClient.fetchIds();
+    return Future.value(List());
+  }
+
+  Future<List<News>> futureNews;
+  @override
+  void initState() {
+    super.initState();
+    futureNews = _fetchId();
   }
 }
