@@ -9,9 +9,12 @@ class HackerNewsRepositoryImpl implements HackerNewsRepository {
   var remoteStore = HackerNewsStoreRemote();
 
   @override
-  Future<List<News>> fetchNews() {
-    return remoteStore.fetchIds().then((value) => Future.wait(value
-        .where((element) => element != null)
-        .map((id) => remoteStore.fetchNews(id))));
+  Future<List<News>> fetchNews() async {
+    return await remoteStore
+        .fetchIds()
+        .then((value) => Future.wait(value
+            .where((element) => element != null)
+            .map((id) => remoteStore.fetchNews(id))))
+        .catchError((onError) => News.error(onError));
   }
 }

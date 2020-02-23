@@ -124,14 +124,10 @@ class HackerNewsListState extends State<HackerNewsList> {
 
   HackerNewsRepository repository = HackerNewsRepositoryImpl();
 
-  Future<List<News>> _fetchNews() {
-    return repository.fetchNews();
-  }
-
   Future<List<News>> futureNews;
   @override
   void initState() {
     super.initState();
-    futureNews = _fetchNews();
+    futureNews = repository.fetchNews();
   }
 }
