@@ -2,8 +2,9 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hn_app/model/news.dart';
-import 'package:flutter_hn_app/remote/rest_client.dart';
 import 'package:flutter_hn_app/theme.dart';
+
+import 'repository/news_repository.dart';
 
 void main() => runApp(MyApp());
 
@@ -121,17 +122,16 @@ class HackerNewsListState extends State<HackerNewsList> {
     );
   }
 
-  HackerNewsRestClient restClient = HackerNewsRestClient();
+  HackerNewsRepository repository = HackerNewsRepositoryImpl();
 
-  Future<List<News>> _fetchId() {
-    restClient.fetchIds();
-    return Future.value(List());
+  Future<List<News>> _fetchNews() {
+    return repository.fetchNews();
   }
 
   Future<List<News>> futureNews;
   @override
   void initState() {
     super.initState();
-    futureNews = _fetchId();
+    futureNews = _fetchNews();
   }
 }

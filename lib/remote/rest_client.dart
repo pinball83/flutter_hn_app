@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_hn_app/model/news.dart';
 
 class HackerNewsRestClient {
   Dio _dio;
@@ -9,18 +8,23 @@ class HackerNewsRestClient {
     _dio.interceptors.add(LogInterceptor(responseBody: true));
   }
 
-  Future<List<int>> fetchIds() async {
-    try {
-      var response = await _dio.get("topstories.json", queryParameters: {
+  Future<Response> fetchIds() {
+    return _dio.get("topstories.json", queryParameters: {
         "orderBy": "\"\$key\"",
         "limitToFirst": 50,
         "startAt": "\"3\""
       });
-      return response.data;
-    } catch (error, stacktrace) {
-      print("Exception occured: $error stackTrace: $stacktrace");
-      return List();
-    }
+//    try {
+//      var response = await _dio.get("topstories.json", queryParameters: {
+//        "orderBy": "\"\$key\"",
+//        "limitToFirst": 50,
+//        "startAt": "\"3\""
+//      });
+//      return response.data;
+//    } catch (error, stacktrace) {
+//      print("Exception occured: $error stackTrace: $stacktrace");
+//      return List();
+//    }
 //    if (response.statusCode == 200) {
 //      Iterable jsonResponse = convert.jsonDecode(response.body);
 //      print("response: $jsonResponse");
@@ -33,13 +37,13 @@ class HackerNewsRestClient {
 //    }
   }
 
-  Future<News> fetchNews(int itemId) async {
-    try {
-      var response = await _dio.get("item/$itemId.json");
-      return News.fromJson(response.data);
-    } catch (error, stacktrace) {
-      print("Exception occured: $error stackTrace: $stacktrace");
-      return News.error(error);
+  Future<Response> fetchNews(int itemId) {
+//    try {
+      return _dio.get("item/$itemId.json");
+//      return News.fromJson(response.data);
+//    } catch (error, stacktrace) {
+//      print("Exception occured: $error stackTrace: $stacktrace");
+//      return News.error(error);
     }
 //    var url = "https://hacker-news.firebaseio.com/v0/item/$itemId.json";
 //    var response = await http.get(url);
@@ -47,5 +51,5 @@ class HackerNewsRestClient {
 //      var jsonDecode = convert.jsonDecode(response.body);
 //      return News.fromJson(jsonDecode);
 //    }
-  }
+//  }
 }
