@@ -1,8 +1,10 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hn_app/bloc/bloc.dart';
 import 'package:flutter_hn_app/model/news.dart';
 import 'package:flutter_hn_app/theme.dart';
+import 'package:provider/provider.dart';
 
 import 'repository/news_repository.dart';
 
@@ -57,6 +59,7 @@ class HackerNewsListState extends State<HackerNewsList> {
 
   @override
   Widget build(BuildContext context) {
+    var bloc = Provider.of<HackerNewsBloc>(context, listen: false);
     return FutureBuilder<List<News>>(
         future: futureNews,
         builder: (BuildContext context, AsyncSnapshot<List<News>> snapshot) {
@@ -122,12 +125,9 @@ class HackerNewsListState extends State<HackerNewsList> {
     );
   }
 
-  HackerNewsRepository repository = HackerNewsRepositoryImpl();
 
-  Future<List<News>> futureNews;
   @override
   void initState() {
     super.initState();
-    futureNews = repository.fetchNews();
   }
 }

@@ -6,6 +6,11 @@ abstract class HackerNewsRepository {
 }
 
 class HackerNewsRepositoryImpl implements HackerNewsRepository {
+  HackerNewsRepositoryImpl._construtctor();
+
+  static final HackerNewsRepository instance =
+      HackerNewsRepositoryImpl._construtctor();
+
   var remoteStore = HackerNewsStoreRemote();
 
   @override
