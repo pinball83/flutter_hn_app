@@ -1,12 +1,13 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hn_app/bloc/bloc.dart';
 import 'package:flutter_hn_app/model/news.dart';
 import 'package:flutter_hn_app/theme.dart';
-import 'package:provider/provider.dart';
 
-import 'repository/news_repository.dart';
+import 'bloc/events.dart';
+import 'bloc/states.dart';
 
 void main() => runApp(MyApp());
 
@@ -32,61 +33,44 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-          // Center is a layout widget. It takes a single child and positions it
-          // in the middle of the parent.
-          child: HackerNewsList()),
+      body: BlocProvider(
+        create: (context) => HackerNewsBloc()..add(FetchNews()),
+        child: Center(
+            // Center is a layout widget. It takes a single child and positions it
+            // in the middle of the parent.
+            child: HackerNewsList()),
+      ),
     );
   }
 }
 
 class HackerNewsList extends StatefulWidget {
-
-  HackerNewsList();
-
   @override
   State<StatefulWidget> createState() => HackerNewsListState();
 }
 
 class HackerNewsListState extends State<HackerNewsList> {
+  HackerNewsBloc _bloc;
+
+  @override
+  void initState() {
+    super.initState();
+    _bloc = context.bloc<HackerNewsBloc>();
+  }
 
   @override
   Widget build(BuildContext context) {
-    var bloc = Provider.of<HackerNewsBloc>(context, listen: false);
-    return FutureBuilder<List<News>>(
-        future: futureNews,
-        builder: (BuildContext context, AsyncSnapshot<List<News>> snapshot) {
+    return BlocBuilder<HackerNewsBloc, NewsState>(
+        bloc: _bloc,
+        builder: (context, state) {
           List<Widget> children;
-          if (snapshot.hasData) {
-            return Container(
-                color: Theme.of(context).accentColor,
-                child: ListView.builder(
-                    padding: const EdgeInsets.all(16.0),
-                    itemCount: snapshot.data.length,
-                    itemBuilder: (context, i) {
-                      return _buildRow(snapshot.data[i]);
-                    }));
-          } else if (snapshot.hasError) {
-            children = <Widget>[
-              Icon(
-                Icons.error_outline,
-                color: Colors.red,
-                size: 60,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 16),
-                child: Text('Error: ${snapshot.error}',
-                    style: Theme.of(context).textTheme.display1),
-              )
-            ];
-          } else {
+          if (state is NewsUninitialized) {
             children = <Widget>[
               SizedBox(
                 child: CircularProgressIndicator(
@@ -101,6 +85,30 @@ class HackerNewsListState extends State<HackerNewsList> {
                   'Awaiting result...',
                   style: Theme.of(context).textTheme.display1,
                 ),
+              )
+            ];
+          }
+          if (state is NewsLoaded) {
+            return Container(
+                color: Theme.of(context).accentColor,
+                child: ListView.builder(
+                    padding: const EdgeInsets.all(16.0),
+                    itemCount: state.news.length,
+                    itemBuilder: (context, i) {
+                      return _buildRow(state.news[i]);
+                    }));
+          }
+          if (state is ErrorState) {
+            children = <Widget>[
+              Icon(
+                Icons.error_outline,
+                color: Colors.red,
+                size: 60,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: Text('Error: ',
+                    style: Theme.of(context).textTheme.display1),
               )
             ];
           }
@@ -123,11 +131,5 @@ class HackerNewsListState extends State<HackerNewsList> {
         log('tap ${news.url}');
       },
     );
-  }
-
-
-  @override
-  void initState() {
-    super.initState();
   }
 }

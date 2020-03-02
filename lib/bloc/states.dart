@@ -1,28 +1,24 @@
-abstract class NewsState{
-  final bool isLoading;
-  NewsState({this.isLoading = false});
+import 'package:equatable/equatable.dart';
+import 'package:flutter_hn_app/model/news.dart';
 
-  copy(bool isLoading);
-}
-
-class NewsLoadedState extends NewsState{
-
-  NewsLoadedState({bool isLoading = false}) : super(isLoading: isLoading);
+abstract class NewsState extends Equatable {
+  const NewsState();
 
   @override
-  copy(bool isLoading) {
-    return NewsLoadedState(isLoading: isLoading);
-  }
-
+  List<Object> get props => [];
 }
 
-class NewsScrolledState extends NewsState{
+class NewsUninitialized extends NewsState {}
 
-  NewsScrolledState({bool isLoading = false}) : super(isLoading: isLoading);
+class NewsLoaded extends NewsState {
+  final List<News> news;
 
-  @override
-  copy(bool isLoading) {
-    return NewsScrolledState(isLoading: isLoading);
+  const NewsLoaded({this.news});
+
+  NewsLoaded copyWith({List<News> news}) {
+    return NewsLoaded(news: news ?? this.news);
   }
+}
 
+class ErrorState extends NewsState {
 }
