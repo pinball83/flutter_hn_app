@@ -32,7 +32,7 @@ class HackerNewsBloc extends Bloc<NewsEvents, NewsState> {
               : NewsLoaded(
                   news: currentState.news + news, hasReachedMax: false);
         }
-      } on NetworkError catch (e) {
+      } on NetworkErrorException catch (e) {
         yield ErrorState(message: e.message);
       }
     }

@@ -12,7 +12,7 @@ class HackerNewsRestClient {
     return _dio.get("topstories.json", queryParameters: {
       "orderBy": "\"\$key\"",
       "limitToFirst": perPage,
-      "startAt": "$offset"
+      "startAt": "\"$offset\""
     });
   }
 

@@ -23,13 +23,13 @@ class HackerNewsStoreRemote {
 
   rethrowNetworkError(onError) {
     var networkError = (onError as DioError).response;
-    throw NetworkError(
+    throw NetworkErrorException(
         "Exception occured: ${networkError.statusCode} stackTrace: ${networkError.statusMessage}");
   }
 }
 
-class NetworkError implements Exception {
+class NetworkErrorException implements Exception {
   final String message;
 
-  NetworkError(this.message);
+  NetworkErrorException(this.message);
 }
