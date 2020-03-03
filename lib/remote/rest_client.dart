@@ -8,11 +8,11 @@ class HackerNewsRestClient {
     _dio.interceptors.add(LogInterceptor(responseBody: true));
   }
 
-  Future<Response> fetchIds() {
+  Future<Response> fetchIds(int offset, int perPage) {
     return _dio.get("topstories.json", queryParameters: {
         "orderBy": "\"\$key\"",
-        "limitToFirst": 50,
-        "startAt": "\"3\""
+        "limitToFirst": perPage,
+        "startAt": "\"$offset\""
       });
 //    try {
 //      var response = await _dio.get("topstories.json", queryParameters: {

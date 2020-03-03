@@ -20,19 +20,16 @@ class HackerNewsBloc extends Bloc<NewsEvents, NewsState> {
       try {
         if (currentState is NewsUninitialized) {
           var news = await _repository.fetchNews();
-          yield NewsLoaded(news: news);
+          yield NewsLoaded(news: news, hasReachedMax: false);
           return;
         }
-        if(currentState is NewsLoaded){
-//          todo добавить пейджинг
-//          final posts =
-//          await _fetchPosts(currentState.posts.length, 20);
-//          yield posts.isEmpty
-//              ? currentState.copyWith(hasReachedMax: true)
-//              : PostLoaded(
-//            posts: currentState.posts + posts,
-//            hasReachedMax: false,
-//          );
+        if (currentState is NewsLoaded) {
+          var news =
+              await _repository.fetchNews(offset: currentState.news.length);
+          yield news.isEmpty
+              ? currentState.copyWith(hasReachedMax: true)
+              : NewsLoaded(
+                  news: currentState.news + news, hasReachedMax: false);
         }
       } catch (e) {
         yield ErrorState();

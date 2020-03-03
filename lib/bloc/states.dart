@@ -12,13 +12,15 @@ class NewsUninitialized extends NewsState {}
 
 class NewsLoaded extends NewsState {
   final List<News> news;
+  final bool hasReachedMax;
 
-  const NewsLoaded({this.news});
+  const NewsLoaded({this.news, this.hasReachedMax});
 
-  NewsLoaded copyWith({List<News> news}) {
-    return NewsLoaded(news: news ?? this.news);
+  NewsLoaded copyWith({List<News> news, bool hasReachedMax}) {
+    return NewsLoaded(
+        news: news ?? this.news,
+        hasReachedMax: hasReachedMax ?? this.hasReachedMax);
   }
 }
 
-class ErrorState extends NewsState {
-}
+class ErrorState extends NewsState {}
