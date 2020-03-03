@@ -17,7 +17,7 @@ class HackerNewsBloc extends Bloc<NewsEvents, NewsState> {
   @override
   Stream<NewsState> mapEventToState(NewsEvents event) async* {
     final currentState = state;
-    if (event is FetchNews) {
+    if (event is FetchNews && !_hasReachedMax(currentState)) {
       try {
         if (currentState is NewsUninitialized) {
           var news = await _repository.fetchNews();
@@ -37,4 +37,7 @@ class HackerNewsBloc extends Bloc<NewsEvents, NewsState> {
       }
     }
   }
+
+  bool _hasReachedMax(NewsState state) =>
+      state is NewsLoaded && state.hasReachedMax;
 }

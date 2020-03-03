@@ -56,12 +56,29 @@ class HackerNewsList extends StatefulWidget {
 }
 
 class HackerNewsListState extends State<HackerNewsList> {
+  final _scrollController = ScrollController();
+  final _scrollThreshold = 200.0;
   HackerNewsBloc _bloc;
 
   @override
   void initState() {
     super.initState();
+    _scrollController.addListener(_onScroll);
     _bloc = context.bloc<HackerNewsBloc>();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final currentScroll = _scrollController.position.pixels;
+    if (maxScroll - currentScroll <= _scrollThreshold) {
+      _bloc.add(FetchNews());
+    }
   }
 
   @override
@@ -93,9 +110,14 @@ class HackerNewsListState extends State<HackerNewsList> {
                 color: Theme.of(context).accentColor,
                 child: ListView.builder(
                     padding: const EdgeInsets.all(16.0),
-                    itemCount: state.news.length,
+                    controller: _scrollController,
+                    itemCount: state.hasReachedMax
+                        ? state.news.length
+                        : state.news.length + 1,
                     itemBuilder: (context, i) {
-                      return _buildRow(state.news[i]);
+                      return i >= state.news.length
+                          ? BottomLoader()
+                          : _buildRow(i, state.news[i]);
                     }));
           }
           if (state is ErrorState) {
@@ -124,12 +146,31 @@ class HackerNewsListState extends State<HackerNewsList> {
         });
   }
 
-  Widget _buildRow(News news) {
+  Widget _buildRow(int index, News news) {
     return ListTile(
-      title: Text(news.title, style: Theme.of(context).textTheme.display2),
+      title: Text("$index ${news.title}", style: Theme.of(context).textTheme.display2),
       onTap: () {
         log('tap ${news.url}');
       },
+    );
+  }
+}
+
+class BottomLoader extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.center,
+      child: Center(
+        child: SizedBox(
+          width: 33,
+          height: 33,
+          child: CircularProgressIndicator(
+            backgroundColor: Colors.black,
+            strokeWidth: 1.5,
+          ),
+        ),
+      ),
     );
   }
 }
