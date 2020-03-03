@@ -21,6 +21,13 @@ class NewsLoaded extends NewsState {
         news: news ?? this.news,
         hasReachedMax: hasReachedMax ?? this.hasReachedMax);
   }
+
+  @override
+  List<Object> get props => [news, hasReachedMax];
+
+  @override
+  String toString() =>
+      'PostLoaded { posts: ${news.length}, hasReachedMax: $hasReachedMax }';
 }
 
 class ErrorState extends NewsState {
