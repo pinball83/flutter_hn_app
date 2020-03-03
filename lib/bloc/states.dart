@@ -23,4 +23,8 @@ class NewsLoaded extends NewsState {
   }
 }
 
-class ErrorState extends NewsState {}
+class ErrorState extends NewsState {
+  final String message;
+
+  const ErrorState({this.message});
+}

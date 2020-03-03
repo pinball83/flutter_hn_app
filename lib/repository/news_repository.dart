@@ -19,7 +19,6 @@ class HackerNewsRepositoryImpl implements HackerNewsRepository {
         .fetchIds(offset: offset)
         .then((value) => Future.wait(value
             .where((element) => element != null)
-            .map((id) => remoteStore.fetchNews(id))))
-        .catchError((onError) => News.error(onError));
+            .map((id) => remoteStore.fetchNews(id))));
   }
 }

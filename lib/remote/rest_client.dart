@@ -10,46 +10,13 @@ class HackerNewsRestClient {
 
   Future<Response> fetchIds(int offset, int perPage) {
     return _dio.get("topstories.json", queryParameters: {
-        "orderBy": "\"\$key\"",
-        "limitToFirst": perPage,
-        "startAt": "\"$offset\""
-      });
-//    try {
-//      var response = await _dio.get("topstories.json", queryParameters: {
-//        "orderBy": "\"\$key\"",
-//        "limitToFirst": 50,
-//        "startAt": "\"3\""
-//      });
-//      return response.data;
-//    } catch (error, stacktrace) {
-//      print("Exception occured: $error stackTrace: $stacktrace");
-//      return List();
-//    }
-//    if (response.statusCode == 200) {
-//      Iterable jsonResponse = convert.jsonDecode(response.body);
-//      print("response: $jsonResponse");
-//      return Future.wait(jsonResponse
-//          .where((element) => element != null)
-//          .map((itemId) => _fetchNews(itemId)));
-//    } else {
-//      return Future.error(
-//          "Netowrk error code ${response.statusCode}, message: ${response.body}");
-//    }
+      "orderBy": "\"\$key\"",
+      "limitToFirst": perPage,
+      "startAt": "$offset"
+    });
   }
 
   Future<Response> fetchNews(int itemId) {
-//    try {
-      return _dio.get("item/$itemId.json");
-//      return News.fromJson(response.data);
-//    } catch (error, stacktrace) {
-//      print("Exception occured: $error stackTrace: $stacktrace");
-//      return News.error(error);
-    }
-//    var url = "https://hacker-news.firebaseio.com/v0/item/$itemId.json";
-//    var response = await http.get(url);
-//    if (response.statusCode == 200) {
-//      var jsonDecode = convert.jsonDecode(response.body);
-//      return News.fromJson(jsonDecode);
-//    }
-//  }
+    return _dio.get("item/$itemId.json");
+  }
 }

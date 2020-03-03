@@ -107,7 +107,7 @@ class HackerNewsListState extends State<HackerNewsList> {
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 16),
-                child: Text('Error: ',
+                child: Text('Error: ${state.message}',
                     style: Theme.of(context).textTheme.display1),
               )
             ];

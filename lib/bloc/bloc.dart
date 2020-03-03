@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hn_app/bloc/events.dart';
 import 'package:flutter_hn_app/bloc/states.dart';
+import 'package:flutter_hn_app/remote/news_store_remote.dart';
 import 'package:flutter_hn_app/repository/news_repository.dart';
 
 class HackerNewsBloc extends Bloc<NewsEvents, NewsState> {
@@ -31,8 +32,8 @@ class HackerNewsBloc extends Bloc<NewsEvents, NewsState> {
               : NewsLoaded(
                   news: currentState.news + news, hasReachedMax: false);
         }
-      } catch (e) {
-        yield ErrorState();
+      } on NetworkError catch (e) {
+        yield ErrorState(message: e.message);
       }
     }
   }
