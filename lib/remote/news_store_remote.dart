@@ -8,10 +8,15 @@ class HackerNewsStoreRemote {
   var restClient = HackerNewsRestClient();
 
   Future<List<int>> fetchIds({int offset, int perPage = _perPage}) {
-    return restClient
-        .fetchIds(offset, perPage)
-        .then((result) => List<int>.from(result.data))
-        .catchError(rethrowNetworkError, test: (e) => e is DioError);
+    return restClient.fetchIds(offset, perPage).then((result) {
+      var data = result.data;
+      Iterable<int> res;
+      if (data is Iterable)
+        res = List<int>.from(data);
+      else
+        res = Map<String, int>.from(data).values;
+      return res.toList();
+    }).catchError(rethrowNetworkError, test: (e) => e is DioError);
   }
 
   Future<News> fetchNews(int itemId) async {
