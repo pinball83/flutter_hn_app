@@ -7,4 +7,6 @@ abstract class NewsEvents extends Equatable {
 
 class FetchNews extends NewsEvents {}
 
+class ReloadNews extends NewsEvents {}
+
 //todo добавить экшены для открытия новости и сохранения/удаления

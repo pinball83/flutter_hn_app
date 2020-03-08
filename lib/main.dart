@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -58,6 +59,7 @@ class HackerNewsList extends StatefulWidget {
 class HackerNewsListState extends State<HackerNewsList> {
   final _scrollController = ScrollController();
   final _scrollThreshold = 200.0;
+  Completer _refreshCompleter;
   HackerNewsBloc _bloc;
 
   @override
@@ -79,6 +81,11 @@ class HackerNewsListState extends State<HackerNewsList> {
     if (maxScroll - currentScroll <= _scrollThreshold) {
       _bloc.add(FetchNews());
     }
+  }
+
+  Future<void> _handleRefresh() {
+    _bloc.add(ReloadNews());
+    return _refreshCompleter?.future;
   }
 
   @override
@@ -106,19 +113,20 @@ class HackerNewsListState extends State<HackerNewsList> {
             ];
           }
           if (state is NewsLoaded) {
+            _refreshCompleter?.complete();
+            _refreshCompleter = Completer();
             return Container(
-                color: Theme.of(context).accentColor,
-                child: ListView.builder(
-                    padding: const EdgeInsets.all(16.0),
-                    controller: _scrollController,
-                    itemCount: state.hasReachedMax
-                        ? state.news.length
-                        : state.news.length + 1,
-                    itemBuilder: (context, i) {
-                      return i >= state.news.length
-                          ? BottomLoader()
-                          : _buildRow(i, state.news[i]);
-                    }));
+              color: Theme.of(context).accentColor,
+              child: new RefreshIndicator(
+                  child: ListView.builder(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      controller: _scrollController,
+                      itemCount: state.hasReachedMax ? state.news.length : state.news.length + 1,
+                      itemBuilder: (context, i) {
+                        return i >= state.news.length ? BottomLoader() : _buildRow(i, state.news[i]);
+                      }),
+                  onRefresh: _handleRefresh),
+            );
           }
           if (state is ErrorState) {
             children = <Widget>[
@@ -129,19 +137,19 @@ class HackerNewsListState extends State<HackerNewsList> {
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 16),
-                child: Text('Error: ${state.message}',
-                    style: Theme.of(context).textTheme.display1),
+                child: Text('Error: ${state.message}', style: Theme.of(context).textTheme.display1),
               )
             ];
           }
           return Container(
             color: Theme.of(context).accentColor,
             child: Center(
-                child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: children,
-            )),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: children,
+              ),
+            ),
           );
         });
   }
