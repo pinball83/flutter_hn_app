@@ -12,8 +12,6 @@ class HackerNewsBloc extends Bloc<NewsEvents, NewsState> {
   @override
   NewsState get initialState => NewsUninitialized();
 
-  fetchNews() async {}
-
   @override
   Stream<NewsState> mapEventToState(NewsEvents event) async* {
     final currentState = state;
