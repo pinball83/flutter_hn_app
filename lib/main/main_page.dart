@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_hn_app/favorites/favorites_page.dart';
 import 'package:flutter_hn_app/main/bloc/events.dart';
 import 'package:flutter_hn_app/main/bloc/states.dart';
 
@@ -11,6 +12,8 @@ import 'bloc/bloc.dart';
 import 'model/news.dart';
 
 class MainPage extends StatefulWidget {
+  static const routName = '/';
+
   MainPage({Key key, this.title}) : super(key: key);
 
   final String title;
@@ -23,9 +26,22 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
+      appBar: AppBar(title: Text('Hacker News Flutter Demo'), actions: <Widget>[
+        Padding(
+            padding: EdgeInsets.only(right: 20.0),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(
+                  context,
+                  FavoritesPage.routName,
+                );
+              },
+              child: Icon(
+                Icons.star_border,
+                size: 26.0,
+              ),
+            )),
+      ]),
       body: BlocProvider(
         create: (context) => HackerNewsBloc()..add(FetchNews()),
         child: Center(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hn_app/favorites/favorites_page.dart';
 import 'package:flutter_hn_app/theme.dart';
 
 import 'main/main_page.dart';
@@ -12,7 +13,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Hacker News',
       theme: ApplicationTheme.themeData,
-      home: MainPage(title: 'Hacker News Flutter Demo'),
+      initialRoute: '/',
+      routes: {
+        MainPage.routName: (context) => MainPage(),
+        FavoritesPage.routName: (context) => FavoritesPage(),
+      },
     );
   }
 }
