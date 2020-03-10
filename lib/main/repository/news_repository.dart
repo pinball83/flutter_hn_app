@@ -1,5 +1,5 @@
-import 'package:flutter_hn_app/model/news.dart';
-import 'package:flutter_hn_app/remote/news_store_remote.dart';
+import 'package:flutter_hn_app/main/model/news.dart';
+import 'package:flutter_hn_app/main/remote/news_store_remote.dart';
 
 abstract class HackerNewsRepository {
   Future<List<News>> fetchNews({int offset});

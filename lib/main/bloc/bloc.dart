@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_hn_app/bloc/events.dart';
-import 'package:flutter_hn_app/bloc/states.dart';
-import 'package:flutter_hn_app/remote/news_store_remote.dart';
-import 'package:flutter_hn_app/repository/news_repository.dart';
+import 'package:flutter_hn_app/main/bloc/events.dart';
+import 'package:flutter_hn_app/main/bloc/states.dart';
+import 'package:flutter_hn_app/main/remote/news_store_remote.dart';
+import 'package:flutter_hn_app/main/repository/news_repository.dart';
 
 class HackerNewsBloc extends Bloc<NewsEvents, NewsState> {
   final HackerNewsRepository _repository = HackerNewsRepositoryImpl.instance;

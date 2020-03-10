@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_hn_app/model/news.dart';
-import 'package:flutter_hn_app/remote/rest_client.dart';
+import 'package:flutter_hn_app/main/model/news.dart';
+import 'package:flutter_hn_app/main/remote/rest_client.dart';
 
 class HackerNewsStoreRemote {
   static const int _perPage = 20;

@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter_hn_app/model/news.dart';
+import 'package:flutter_hn_app/main/model/news.dart';
 
 abstract class NewsState extends Equatable {
   const NewsState();
