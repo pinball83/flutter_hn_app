@@ -163,7 +163,10 @@ class HackerNewsListState extends State<HackerNewsList> {
         log('tap ${news.url}');
       },
       trailing: new IconButton(
-        icon: new Icon(Icons.star_border,color: Theme.of(context).accentIconTheme.color,),
+        icon: new Icon(
+          Icons.star_border,
+          color: Theme.of(context).accentIconTheme.color,
+        ),
         onPressed: () {
           log("icon tap");
         },
