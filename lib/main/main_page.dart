@@ -26,7 +26,7 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Hacker News Flutter Demo'), actions: <Widget>[
+      appBar: AppBar(title: Text('Hacker News Flutter Demo'), automaticallyImplyLeading: false, actions: <Widget>[
         Padding(
             padding: EdgeInsets.only(right: 20.0),
             child: GestureDetector(
