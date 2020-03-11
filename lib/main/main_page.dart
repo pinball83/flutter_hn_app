@@ -164,11 +164,12 @@ class HackerNewsListState extends State<HackerNewsList> {
       },
       trailing: new IconButton(
         icon: new Icon(
-          Icons.star_border,
+          news.isAdded ? Icons.star : Icons.star_border,
           color: Theme.of(context).accentIconTheme.color,
         ),
         onPressed: () {
           log("icon tap");
+          _bloc.add(AddToFavorites(news));
         },
       ),
     );
