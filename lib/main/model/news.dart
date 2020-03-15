@@ -13,7 +13,11 @@ class News extends Equatable {
         isAdded = false;
 
   News copyWith({String title, String url, bool isAdded}) {
-    return News(title: title ?? this.title, url: url ?? this.url, isAdded: isAdded ?? this.isAdded);
+    return News(
+      title: title ?? this.title,
+      url: url ?? this.url,
+      isAdded: isAdded ?? this.isAdded,
+    );
   }
 
   @override

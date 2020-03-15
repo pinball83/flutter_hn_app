@@ -27,7 +27,7 @@ class NewsLoaded extends NewsState {
 
   @override
   String toString() =>
-      'PostLoaded { posts: ${news.length}, hasReachedMax: $hasReachedMax }';
+      'NewsLoaded { posts: ${news.length}, hasReachedMax: $hasReachedMax }';
 }
 
 class ErrorState extends NewsState {

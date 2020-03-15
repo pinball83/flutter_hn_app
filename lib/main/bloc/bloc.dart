@@ -34,14 +34,14 @@ class HackerNewsBloc extends Bloc<NewsEvents, NewsState> {
       yield NewsLoaded(news: news, hasReachedMax: false);
       return;
     } else if (event is AddToFavorites) {
-      var updatedNews = await _repository.addToFavorites(event.news);
       if (currentState is NewsLoaded) {
+        var updatedNews = await _repository.addToFavorites(event.news);
         var oldNews = currentState.news;
         var index = oldNews.indexOf(event.news);
-        oldNews.insert(index, updatedNews);
-        yield currentState.copyWith(news: oldNews, hasReachedMax: false);
+        oldNews[index] = updatedNews;
+        yield currentState.copyWith(news: oldNews);
+        return;
       }
-      return;
     }
   }
 
