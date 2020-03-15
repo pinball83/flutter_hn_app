@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hn_app/main/bloc/events.dart';
 import 'package:flutter_hn_app/main/bloc/states.dart';
+import 'package:flutter_hn_app/main/model/news.dart';
 import 'package:flutter_hn_app/main/remote/news_store_remote.dart';
 import 'package:flutter_hn_app/main/repository/news_repository.dart';
 
@@ -36,7 +37,7 @@ class HackerNewsBloc extends Bloc<NewsEvents, NewsState> {
     } else if (event is AddToFavorites) {
       if (currentState is NewsLoaded) {
         var updatedNews = await _repository.addToFavorites(event.news);
-        var oldNews = currentState.news;
+        List<News> oldNews = List.from(currentState.news);
         var index = oldNews.indexOf(event.news);
         oldNews[index] = updatedNews;
         yield currentState.copyWith(news: oldNews);

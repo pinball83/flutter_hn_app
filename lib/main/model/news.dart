@@ -21,5 +21,10 @@ class News extends Equatable {
   }
 
   @override
-  List<Object> get props => [this.title, this.url, this.isAdded];
+  List<Object> get props => [this.title, this.url];
+
+  @override
+  String toString() {
+    return "$title,$url";
+  }
 }

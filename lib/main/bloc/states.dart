@@ -1,4 +1,6 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_hn_app/main/model/news.dart';
 
 abstract class NewsState extends Equatable {
@@ -24,6 +26,21 @@ class NewsLoaded extends NewsState {
 
   @override
   List<Object> get props => [news, hasReachedMax];
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+          super == other &&
+              other is NewsLoaded &&
+              runtimeType == other.runtimeType &&
+              listEquals(news, other.news) &&
+              hasReachedMax == other.hasReachedMax;
+
+  @override
+  int get hashCode =>
+      super.hashCode ^
+      hashList(news) ^
+      hasReachedMax.hashCode;
 
   @override
   String toString() =>
