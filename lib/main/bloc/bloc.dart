@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hn_app/main/bloc/events.dart';
 import 'package:flutter_hn_app/main/bloc/states.dart';
@@ -33,15 +34,15 @@ class HackerNewsBloc extends Bloc<NewsEvents, NewsState> {
     } else if (event is ReloadNews) {
       var news = await _repository.fetchNews();
       yield NewsLoaded(news: news, hasReachedMax: false);
-      return;
     } else if (event is AddToFavorites) {
       if (currentState is NewsLoaded) {
         var updatedNews = await _repository.addToFavorites(event.news);
         List<News> oldNews = List.from(currentState.news);
         var index = oldNews.indexOf(event.news);
         oldNews[index] = updatedNews;
-        yield currentState.copyWith(news: oldNews);
-        return;
+        var nextState = currentState.copyWith(news: oldNews);
+        print("is state valide: ${listEquals(currentState.news, nextState.news)}");
+        yield nextState;
       }
     }
   }
